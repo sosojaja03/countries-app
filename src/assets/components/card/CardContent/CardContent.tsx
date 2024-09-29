@@ -6,7 +6,10 @@ interface CardContentProps {
   population: number;
 }
 
-const CardContent: React.FC<CardContentProps> = ({ capital, population }) => {
+export const CardContent: React.FC<CardContentProps> = ({
+  capital,
+  population,
+}) => {
   return (
     <div className={styles.cardDescription}>
       <p>Capital: {capital}</p>
@@ -14,5 +17,3 @@ const CardContent: React.FC<CardContentProps> = ({ capital, population }) => {
     </div>
   );
 };
-
-export default CardContent;

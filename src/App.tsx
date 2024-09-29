@@ -1,8 +1,8 @@
 import React from "react";
 import "./index.css";
-import Header from "./assets/components/header/Header";
-import Hero from "./assets/components/hero/Hero";
-import Cards from "./assets/components/card/Cards";
+import { Cards } from "./assets/components/card/MainCard";
+import { Hero } from "./assets/components/hero";
+import { Layout } from "./assets/components/layout/dashboard/";
 
 interface Country {
   name: string;
@@ -31,12 +31,10 @@ const CountryData: Country[] = [
 
 const App: React.FC = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <Hero />
-      {/* Pass the CountryData array to the Cards component */}
       <Cards countries={CountryData} />
-    </div>
+    </Layout>
   );
 };
 

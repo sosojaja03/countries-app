@@ -5,8 +5,6 @@ interface CardHeaderProps {
   title: string;
 }
 
-const CardHeader: React.FC<CardHeaderProps> = ({ title }) => {
+export const CardHeader: React.FC<CardHeaderProps> = ({ title }) => {
   return <h3 className={styles.cardTitle}>{title}</h3>;
 };
-
-export default CardHeader;
