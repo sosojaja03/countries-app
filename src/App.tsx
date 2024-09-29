@@ -1,8 +1,8 @@
 import React from "react";
 import "./index.css";
-import { Cards } from "./assets/components/card/MainCard";
-import { Hero } from "./assets/components/hero";
-import { Layout } from "./assets/components/layout/dashboard/";
+import { Cards } from "@/assets/components/card/MainCard";
+import { Hero } from "@/assets/components/hero";
+import { Layout } from "@/assets/components/layout/dashboard";
 
 interface Country {
   name: string;

@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import styles from "./Card.module.css";
-import { CardHeader } from "../CardHeader/CardHeader";
-import { CardContent } from "../CardContent/CardContent";
+import { CardHeader } from "@/assets/components/card/CardHeader";
+import { CardContent } from "@/assets/components/card/CardContent";
 
 interface Country {
   name: string;

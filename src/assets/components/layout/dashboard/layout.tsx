@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Header } from "../../header";
+import { Header } from "@/assets/components/header";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,7 +10,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div>
       <Header />
       <main>{children}</main>
-      {/* You can add a Footer component here if needed */}
     </div>
   );
 };
