@@ -1,20 +1,35 @@
 import React from "react";
 import * as styles from "./Header.module.css";
+import { Link, NavLink } from "react-router-dom";
 
 export const Header: React.FC = () => {
+  const navItems = [
+    { name: "Destinations", path: "/destinations" },
+    { name: "Tours", path: "/tours" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
         <div className={styles.logo}>
-          <h1 className={styles.logoText}>WonderTravel</h1>
+          <Link to="/">
+            <h1 className={styles.logoText}>WonderTravel</h1>
+          </Link>
         </div>
         <nav>
           <ul className={styles.navList}>
-            {["Destinations", "Tours", "About", "Contact"].map((item) => (
-              <li key={item} className={styles.navItem}>
-                <a href="#" className={styles.navLink}>
-                  {item}
-                </a>
+            {navItems.map((item) => (
+              <li key={item.name} className={styles.navItem}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => {
+                    return isActive ? styles.active : styles.navLink;
+                  }}
+                >
+                  {item.name}
+                </NavLink>
               </li>
             ))}
           </ul>

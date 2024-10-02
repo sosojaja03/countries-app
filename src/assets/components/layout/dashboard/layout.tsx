@@ -1,15 +1,13 @@
-import React, { ReactNode } from "react";
 import { Header } from "@/assets/components/header";
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout = () => {
   return (
     <div>
       <Header />
-      <main>{children}</main>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 };

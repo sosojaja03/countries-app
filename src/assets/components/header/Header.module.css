@@ -37,6 +37,10 @@
   color: black;
 }
 
+.active {
+  color: red;
+}
+
 .headerActions {
   width: 10rem;
   display: flex;

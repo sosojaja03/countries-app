@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import styles from "./Card.module.css";
-import { CardHeader } from "@/assets/components/card/CardHeader";
-import { CardContent } from "@/assets/components/card/CardContent";
+import { CardHeader } from "@/pages/home/components/card/CardHeader";
+import { CardContent } from "@/pages/home/components/card/CardContent";
 
 interface Country {
   name: string;
@@ -13,11 +13,11 @@ interface CardsProps {
   countries: Country[];
 }
 
-export const Card: React.FC<PropsWithChildren> = ({ children }) => {
+ const Card: React.FC<PropsWithChildren> = ({ children }) => {
   return <div className={styles.card}>{children}</div>;
 };
 
-export const Cards: React.FC<CardsProps> = ({ countries }) => {
+const Cards: React.FC<CardsProps> = ({ countries }) => {
   return (
     <section className={styles.cards}>
       <div className={styles.cardContainer}>
@@ -35,3 +35,5 @@ export const Cards: React.FC<CardsProps> = ({ countries }) => {
     </section>
   );
 };
+
+export default Cards;

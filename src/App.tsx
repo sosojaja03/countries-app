@@ -1,40 +1,25 @@
 import React from "react";
 import "./index.css";
-import { Cards } from "@/assets/components/card/MainCard";
-import { Hero } from "@/assets/components/hero";
-import { Layout } from "@/assets/components/layout/dashboard";
-
-interface Country {
-  name: string;
-  population: number;
-  capital: string;
-}
-
-// Uncomment CountryData array
-const CountryData: Country[] = [
-  {
-    name: "Georgia",
-    population: 3.713,
-    capital: "Tbilisi",
-  },
-  {
-    name: "France",
-    population: 67.97,
-    capital: "Paris",
-  },
-  {
-    name: "Turkey",
-    population: 84.98,
-    capital: "Ankara",
-  },
-];
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CardList from "./pages/home/views/list";
+import AboutWievs from "./pages/about/views";
+import { Layout } from "./assets/components/layout/dashboard";
+import PageNotFound from "./pages/404";
 
 const App: React.FC = () => {
   return (
-    <Layout>
-      <Hero />
-      <Cards countries={CountryData} />
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<CardList />} />
+          <Route path="destinations" element={<AboutWievs />} />
+          <Route path="tours" element={<AboutWievs />} />
+          <Route path="about" element={<AboutWievs />} />
+          <Route path="contact" element={<AboutWievs />} />
+        </Route>
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
