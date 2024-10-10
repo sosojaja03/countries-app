@@ -3,6 +3,7 @@ export interface Country {
   population: number;
   capital: string;
   id: string;
+  likes: number;
 }
 
 export interface CardsProps {
@@ -16,18 +17,21 @@ const CountryData: Country[] = [
     population: 3.713,
     capital: "Tbilisi",
     id: "1",
+    likes: 0,
   },
   {
     name: "France",
     population: 67.97,
     capital: "Paris",
     id: "2",
+    likes: 0,
   },
   {
     name: "Turkey",
     population: 84.98,
     capital: "Ankara",
     id: "3",
+    likes: 0,
   },
 ];
 

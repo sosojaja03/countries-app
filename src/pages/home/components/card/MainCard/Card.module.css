@@ -19,3 +19,14 @@
   border: 2px solid rgb(177, 173, 173);
   box-shadow: 20px 20px 20px rgba(177, 173, 173, 0.5), 2px 2px #555555;
 }
+
+.likeSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.sortButton {
+  margin-bottom: 20px;
+}
