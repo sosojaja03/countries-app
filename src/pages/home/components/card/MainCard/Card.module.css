@@ -1,5 +1,6 @@
 .cardContainer {
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 50vh;
   justify-content: center;
@@ -11,10 +12,11 @@
   display: flex;
   flex-direction: column;
   height: 20rem;
-  width: 18rem;
+  width: 100%;
   justify-content: space-evenly;
   align-items: center;
   border-radius: 1rem;
+  margin-top: 2rem;
   background-color: wheat;
   border: 2px solid rgb(177, 173, 173);
   box-shadow: 20px 20px 20px rgba(177, 173, 173, 0.5), 2px 2px #555555;
@@ -29,4 +31,22 @@
 
 .sortButton {
   margin-bottom: 20px;
+}
+
+.deletedCard {
+  opacity: 0.5;
+  background-color: #fd3535;
+}
+
+.addForm {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
