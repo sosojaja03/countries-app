@@ -1,11 +1,10 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, ChangeEvent } from "react";
 import styles from "./Card.module.css";
 import { CardHeader } from "@/pages/home/components/card/CardHeader";
 import { CardContent } from "@/pages/home/components/card/CardContent";
 import { Link } from "react-router-dom";
 import { CardsProps, Country } from "@/pages/home/static/RawData";
 
-// Action types
 type Action =
   | { type: "LIKE"; id: string }
   | { type: "DELETE"; id: string }
@@ -13,7 +12,6 @@ type Action =
   | { type: "ADD"; country: Country }
   | { type: "SORT"; order: "asc" | "desc" };
 
-// Reducer function
 const countryReducer = (state: Country[], action: Action): Country[] => {
   switch (action.type) {
     case "LIKE":
@@ -73,52 +71,108 @@ const Card: React.FC<{
   );
 };
 
+interface FormErrors {
+  name?: string;
+  capital?: string;
+  population?: string;
+}
+
 const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
   onAdd,
 }) => {
   const [name, setName] = useState("");
   const [capital, setCapital] = useState("");
   const [population, setPopulation] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleNameInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleCapitalInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setCapital(e.target.value);
+  };
+
+  const handlePopulationInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setPopulation(e.target.value);
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (name.trim() === "") {
+      newErrors.name = "Country name is required";
+    }
+
+    if (capital.trim() === "") {
+      newErrors.capital = "Capital is required";
+    }
+
+    if (population.trim() === "") {
+      newErrors.population = "Population is required";
+    } else if (isNaN(Number(population)) || Number(population) <= 0) {
+      newErrors.population = "Population must be a positive number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newCountry: Country = {
-      id: Date.now().toString(),
-      name,
-      capital,
-      population: Number(population),
-      likes: 0,
-      deleted: false,
-    };
-    onAdd(newCountry);
-    setName("");
-    setCapital("");
-    setPopulation("");
+    if (validateForm()) {
+      const newCountry: Country = {
+        id: Date.now().toString(),
+        name,
+        capital,
+        population: Number(population),
+        likes: 0,
+        deleted: false,
+      };
+      onAdd(newCountry);
+      setName("");
+      setCapital("");
+      setPopulation("");
+      setErrors({});
+    }
+    // } else {
+    //   console.log("Form has errors. Please correct them.");
+    // }
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.addForm}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Country Name"
-        required
-      />
-      <input
-        type="text"
-        value={capital}
-        onChange={(e) => setCapital(e.target.value)}
-        placeholder="Capital"
-        required
-      />
-      <input
-        type="number"
-        value={population}
-        onChange={(e) => setPopulation(e.target.value)}
-        placeholder="Population"
-        required
-      />
+      <div>
+        <input
+          type="text"
+          value={name}
+          onChange={handleNameInput}
+          placeholder="Country Name"
+        />
+        {errors.name && <span className={styles.error}>{errors.name}</span>}
+      </div>
+      <div>
+        <input
+          type="text"
+          value={capital}
+          onChange={handleCapitalInput}
+          placeholder="Capital"
+        />
+        {errors.capital && (
+          <span className={styles.error}>{errors.capital}</span>
+        )}
+      </div>
+      <div>
+        <input
+          type="text"
+          value={population}
+          onChange={handlePopulationInput}
+          placeholder="Population"
+        />
+        {errors.population && (
+          <span className={styles.error}>{errors.population}</span>
+        )}
+      </div>
       <button type="submit">Add Country</button>
     </form>
   );
