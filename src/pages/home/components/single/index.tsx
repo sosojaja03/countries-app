@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import CountryData from "@/pages/home/static/RawData";
 import CountryNotFound from "@/pages/CountryNotFound";
+import translations from "../../static/Translations";
 
 const SingleCardElement = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, lang } = useParams<{ id: string; lang: "ka" | "en" }>();
+
+  const currentLang = lang || "ka";
 
   const country = CountryData.find((c) => c.id === id);
 
@@ -13,12 +16,14 @@ const SingleCardElement = () => {
 
   return (
     <div>
-      <h1>{country.name}</h1>
+      <h1>{country.name[currentLang]}</h1>
       <p>
-        <strong>Capital:</strong> {country.capital}
+        <strong>{translations[currentLang].capital}:</strong>
+        {country.capital[currentLang]}
       </p>
       <p>
-        <strong>Population:</strong> {country.population} million
+        <strong>{translations[currentLang].population}:</strong>
+        {country.population} million
       </p>
     </div>
   );

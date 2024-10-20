@@ -25,6 +25,7 @@ const translations = {
     ankara: "Ankara",
     countryNameGeo: "Country Name (Georgian)",
     countryNameEng: "Country Name (English)",
+    capital: "Capital",
     capitalGeo: "Capital (Georgian)",
     capitalEng: "Capital (English)",
     population: "Population",
@@ -57,6 +58,8 @@ const translations = {
     ankara: "ანკარა",
     countryNameGeo: "ქვეყნის სახელი (ქართულად)",
     countryNameEng: "ქვეყნის სახელი (ინგლისურად)",
+    capital: "დედაქალაქი",
+
     capitalGeo: "დედაქალაქი (ქართულად)",
     capitalEng: "დედაქალაქი (ინგლისურად)",
     population: "მოსახლეობა",

@@ -53,7 +53,7 @@ const Card: React.FC<{
     <div
       className={`${styles.card} ${country.deleted ? styles.deletedCard : ""}`}
     >
-      <Link to={`/tours/${country.id}`}>
+      <Link to={`${country.id}`}>
         <CardHeader title={country.name[lang]} />
         <CardContent
           capital={country.capital[lang]}
