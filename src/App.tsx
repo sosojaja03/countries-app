@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import CardList from "./pages/home/views/list/fordata";
 import AboutWievs from "./pages/about/views";
 import { Layout } from "./assets/components/layout/dashboard";
@@ -13,14 +13,15 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<div>home page</div>} />
+        <Route path="/:lang" element={<Layout />}>
+          <Route index element={<Navigate to="tours" replace />} />
           <Route path="tours" element={<CardList />} />
           <Route path="destinations" element={<AboutWievs />} />
           <Route path="about" element={<AboutWievs />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="tours/:id" element={<DetailedCard />} />
         </Route>
+        <Route path="/" element={<Navigate to="/ka" replace />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

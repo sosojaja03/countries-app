@@ -1,7 +1,9 @@
+import translations from "./Translations";
+
 export interface Country {
-  name: string;
+  name: { ka: string; en: string };
   population: number;
-  capital: string;
+  capital: { ka: string; en: string };
   id: string;
   likes: number;
   deleted?: boolean;
@@ -12,25 +14,26 @@ export interface CardsProps {
 }
 
 // Uncomment CountryData array
+
 const CountryData: Country[] = [
   {
-    name: "Georgia",
+    name: { ka: translations.ka.georgia, en: translations.en.georgia },
     population: 3.713,
-    capital: "Tbilisi",
+    capital: { ka: translations.ka.tbilisi, en: translations.en.tbilisi },
     id: "1",
     likes: 0,
   },
   {
-    name: "France",
+    name: { ka: translations.ka.france, en: translations.en.france },
     population: 67.97,
-    capital: "Paris",
+    capital: { ka: translations.ka.paris, en: translations.en.paris },
     id: "2",
     likes: 0,
   },
   {
-    name: "Turkey",
+    name: { ka: translations.ka.turkey, en: translations.en.turkey },
     population: 84.98,
-    capital: "Ankara",
+    capital: { ka: translations.ka.ankara, en: translations.en.ankara },
     id: "3",
     likes: 0,
   },

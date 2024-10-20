@@ -4,6 +4,8 @@ import { CardHeader } from "@/pages/home/components/card/CardHeader";
 import { CardContent } from "@/pages/home/components/card/CardContent";
 import { Link } from "react-router-dom";
 import { CardsProps, Country } from "@/pages/home/static/RawData";
+import { useParams } from "react-router-dom";
+import translations from "@/pages/home/static/Translations";
 
 type Action =
   | { type: "LIKE"; id: string }
@@ -45,14 +47,16 @@ const Card: React.FC<{
   onDelete: () => void;
   onRestore: () => void;
 }> = ({ country, onLike, onDelete, onRestore }) => {
+  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  // const t = translations[lang];
   return (
     <div
       className={`${styles.card} ${country.deleted ? styles.deletedCard : ""}`}
     >
       <Link to={`/tours/${country.id}`}>
-        <CardHeader title={country.name} />
+        <CardHeader title={country.name[lang]} />
         <CardContent
-          capital={country.capital}
+          capital={country.capital[lang]}
           population={country.population}
         />
       </Link>
@@ -77,41 +81,38 @@ interface FormErrors {
   population?: string;
 }
 
-const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
-  onAdd,
-}) => {
-  const [name, setName] = useState("");
-  const [capital, setCapital] = useState("");
+const AddCountryForm: React.FC<{
+  onAdd: (country: Country) => void;
+}> = ({ onAdd }) => {
+  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const t = translations[lang];
+
+  const [name, setName] = useState<{ ka: string; en: string }>({
+    ka: "",
+    en: "",
+  });
+  const [capital, setCapital] = useState<{ ka: string; en: string }>({
+    ka: "",
+    en: "",
+  });
   const [population, setPopulation] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
-
-  const handleNameInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleCapitalInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setCapital(e.target.value);
-  };
-
-  const handlePopulationInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setPopulation(e.target.value);
-  };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (name.trim() === "") {
-      newErrors.name = "Country name is required";
+    if (name.ka.trim() === "" || name.en.trim() === "") {
+      newErrors.name = "Country name is required in both languages";
     }
 
-    if (capital.trim() === "") {
-      newErrors.capital = "Capital is required";
+    if (capital.ka.trim() === "" || capital.en.trim() === "") {
+      newErrors.capital = "Capital is required in both languages";
     }
 
     if (population.trim() === "") {
-      newErrors.population = "Population is required";
+      newErrors.population = t.populationError;
     } else if (isNaN(Number(population)) || Number(population) <= 0) {
-      newErrors.population = "Population must be a positive number";
+      newErrors.population = t.populationError;
     }
 
     setErrors(newErrors);
@@ -130,14 +131,11 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
         deleted: false,
       };
       onAdd(newCountry);
-      setName("");
-      setCapital("");
+      setName({ ka: "", en: "" });
+      setCapital({ ka: "", en: "" });
       setPopulation("");
       setErrors({});
     }
-    // } else {
-    //   console.log("Form has errors. Please correct them.");
-    // }
   };
 
   return (
@@ -145,18 +143,30 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
       <div>
         <input
           type="text"
-          value={name}
-          onChange={handleNameInput}
-          placeholder="Country Name"
+          value={name.ka}
+          onChange={(e) => setName({ ...name, ka: e.target.value })}
+          placeholder={t.countryNameGeo}
+        />
+        <input
+          type="text"
+          value={name.en}
+          onChange={(e) => setName({ ...name, en: e.target.value })}
+          placeholder={t.countryNameEng}
         />
         {errors.name && <span className={styles.error}>{errors.name}</span>}
       </div>
       <div>
         <input
           type="text"
-          value={capital}
-          onChange={handleCapitalInput}
-          placeholder="Capital"
+          value={capital.ka}
+          onChange={(e) => setCapital({ ...capital, ka: e.target.value })}
+          placeholder={t.capitalGeo}
+        />
+        <input
+          type="text"
+          value={capital.en}
+          onChange={(e) => setCapital({ ...capital, en: e.target.value })}
+          placeholder={t.capitalEng}
         />
         {errors.capital && (
           <span className={styles.error}>{errors.capital}</span>
@@ -166,14 +176,14 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
         <input
           type="text"
           value={population}
-          onChange={handlePopulationInput}
-          placeholder="Population"
+          onChange={(e) => setPopulation(e.target.value)}
+          placeholder={t.populationPlaceholder}
         />
         {errors.population && (
           <span className={styles.error}>{errors.population}</span>
         )}
       </div>
-      <button type="submit">Add Country</button>
+      <button type="submit">{t.addCountry}</button>
     </form>
   );
 };
@@ -197,6 +207,7 @@ const Cards: React.FC<CardsProps> = ({ countries: initialCountries }) => {
   return (
     <section className={styles.cards}>
       <AddCountryForm onAdd={(country) => dispatch({ type: "ADD", country })} />
+
       <button onClick={handleSort} className={styles.sortButton}>
         Sort by Likes ({sortOrder === "asc" ? "Ascending" : "Descending"})
       </button>

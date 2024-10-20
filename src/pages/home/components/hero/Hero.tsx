@@ -1,19 +1,20 @@
 import React from "react";
 import * as styles from "./Hero.module.css";
+import translations from "@/pages/home/static/Translations";
+import { useParams } from "react-router-dom";
 
 const Hero: React.FC = () => {
+  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const t = translations[lang];
   return (
     <section className={styles.hero}>
       <div className={styles.heroContainer}>
         <div className={styles.heroContent}>
-          <h2 className="hero-title">Discover the World with WonderTravel</h2>
-          <p className="hero-description">
-            Embark on unforgettable journeys to exotic destinations. Create
-            memories that last a lifetime.
-          </p>
+          <h2 className="hero-title">{t.discoverTour}</h2>
+          <p className="hero-description">{t.journeyDescription}</p>
           <div className={styles.heroButtons}>
-            <button className={styles.button}>Explore Destinations</button>
-            <button className={styles.button}>View Tours</button>
+            <button className={styles.button}>{t.exploreDestinations}</button>
+            <button className={styles.button}>{t.viewTours}</button>
           </div>
         </div>
         <div className={styles.heroImage}>
