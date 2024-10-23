@@ -1,4 +1,10 @@
-import React, { useReducer, useState, ChangeEvent } from "react";
+import React, {
+  useReducer,
+  useState,
+  ChangeEvent,
+  useCallback,
+  useMemo,
+} from "react";
 import styles from "./Card.module.css";
 import { CardHeader } from "@/pages/home/components/card/CardHeader";
 import { CardContent } from "@/pages/home/components/card/CardContent";
@@ -48,15 +54,22 @@ const Card: React.FC<{
   onRestore: () => void;
 }> = ({ country, onLike, onDelete, onRestore }) => {
   const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
-  // const t = translations[lang];
+
   return (
     <div
       className={`${styles.card} ${country.deleted ? styles.deletedCard : ""}`}
     >
       <Link to={`${country.id}`}>
-        <CardHeader title={country.name[lang]} />
+        <div className={styles.cardImageContainer}>
+          <img
+            src={country.image || "/path/to/placeholder-image.jpg"}
+            alt={country.name[lang]}
+            className={styles.cardImage}
+          />
+        </div>
+        <CardHeader title={country.name} />
         <CardContent
-          capital={country.capital[lang]}
+          capital={country.capital}
           population={country.population}
         />
       </Link>
@@ -79,6 +92,14 @@ interface FormErrors {
   name?: string;
   capital?: string;
   population?: string;
+  image?: string;
+}
+
+interface CountryFormData {
+  name: { ka: string; en: string };
+  capital: { ka: string; en: string };
+  population: string;
+  image: string;
 }
 
 const AddCountryForm: React.FC<{
@@ -87,70 +108,144 @@ const AddCountryForm: React.FC<{
   const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
   const t = translations[lang];
 
-  const [name, setName] = useState<{ ka: string; en: string }>({
-    ka: "",
-    en: "",
+  const [formData, setFormData] = useState<CountryFormData>({
+    name: { ka: "", en: "" },
+    capital: { ka: "", en: "" },
+    population: "",
+    image: "",
   });
-  const [capital, setCapital] = useState<{ ka: string; en: string }>({
-    ka: "",
-    en: "",
-  });
-  const [population, setPopulation] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+  // Memoized validation function
+  const validateForm = useMemo(() => {
+    return (): boolean => {
+      const newErrors: FormErrors = {};
 
-    if (name.ka.trim() === "" || name.en.trim() === "") {
-      newErrors.name = "Country name is required in both languages";
-    }
+      if (formData.name.ka.trim() === "" || formData.name.en.trim() === "") {
+        newErrors.name = "Country name is required in both languages";
+      }
 
-    if (capital.ka.trim() === "" || capital.en.trim() === "") {
-      newErrors.capital = "Capital is required in both languages";
-    }
+      if (
+        formData.capital.ka.trim() === "" ||
+        formData.capital.en.trim() === ""
+      ) {
+        newErrors.capital = "Capital is required in both languages";
+      }
 
-    if (population.trim() === "") {
-      newErrors.population = t.populationError;
-    } else if (isNaN(Number(population)) || Number(population) <= 0) {
-      newErrors.population = t.populationError;
-    }
+      if (formData.population.trim() === "") {
+        newErrors.population = t.populationError;
+      } else if (
+        isNaN(Number(formData.population)) ||
+        Number(formData.population) <= 0
+      ) {
+        newErrors.population = t.populationError;
+      }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+      if (formData.image === "") {
+        newErrors.image = "Image is required";
+      }
 
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+  }, [formData, t]);
+
+  // Callback for handling input changes
+  const handleInputChange = useCallback(
+    (
+      e: ChangeEvent<HTMLInputElement>,
+      field: keyof CountryFormData,
+      subField?: "ka" | "en"
+    ) => {
+      const value = e.target.value;
+      setFormData((prev) => {
+        if (subField) {
+          return {
+            ...prev,
+            [field]: {
+              ...prev[field as keyof Pick<CountryFormData, "name" | "capital">],
+              [subField]: value,
+            },
+          };
+        }
+        return { ...prev, [field]: value };
+      });
+    },
+    []
+  );
+
+  // Callback for handling file upload
+  const handleFileUpload = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        if (file.type === "image/jpeg" || file.type === "image/png") {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setFormData((prev) => ({
+              ...prev,
+              image: reader.result as string,
+            }));
+          };
+          reader.readAsDataURL(file);
+        } else {
+          setErrors((prev) => ({ ...prev, image: t.imageError }));
+        }
+      }
+    },
+    [t.imageError]
+  );
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
       const newCountry: Country = {
         id: Date.now().toString(),
-        name,
-        capital,
-        population: Number(population),
+        name: formData.name,
+        capital: formData.capital,
+        population: Number(formData.population),
         likes: 0,
         deleted: false,
+        image: formData.image,
       };
       onAdd(newCountry);
-      setName({ ka: "", en: "" });
-      setCapital({ ka: "", en: "" });
-      setPopulation("");
+      setFormData({
+        name: { ka: "", en: "" },
+        capital: { ka: "", en: "" },
+        population: "",
+        image: "",
+      });
       setErrors({});
     }
   };
+
+  // Conditional rendering for preview image
+  const imagePreview = useMemo(() => {
+    if (formData.image) {
+      return (
+        <img
+          src={formData.image}
+          alt="Country preview"
+          style={{ maxWidth: "200px", maxHeight: "200px" }}
+        />
+      );
+    }
+    return null;
+  }, [formData.image]);
 
   return (
     <form onSubmit={handleSubmit} className={styles.addForm}>
       <div>
         <input
           type="text"
-          value={name.ka}
-          onChange={(e) => setName({ ...name, ka: e.target.value })}
+          value={formData.name.ka}
+          onChange={(e) => handleInputChange(e, "name", "ka")}
           placeholder={t.countryNameGeo}
         />
         <input
           type="text"
-          value={name.en}
-          onChange={(e) => setName({ ...name, en: e.target.value })}
+          value={formData.name.en}
+          onChange={(e) => handleInputChange(e, "name", "en")}
           placeholder={t.countryNameEng}
         />
         {errors.name && <span className={styles.error}>{errors.name}</span>}
@@ -158,14 +253,14 @@ const AddCountryForm: React.FC<{
       <div>
         <input
           type="text"
-          value={capital.ka}
-          onChange={(e) => setCapital({ ...capital, ka: e.target.value })}
+          value={formData.capital.ka}
+          onChange={(e) => handleInputChange(e, "capital", "ka")}
           placeholder={t.capitalGeo}
         />
         <input
           type="text"
-          value={capital.en}
-          onChange={(e) => setCapital({ ...capital, en: e.target.value })}
+          value={formData.capital.en}
+          onChange={(e) => handleInputChange(e, "capital", "en")}
           placeholder={t.capitalEng}
         />
         {errors.capital && (
@@ -175,13 +270,23 @@ const AddCountryForm: React.FC<{
       <div>
         <input
           type="text"
-          value={population}
-          onChange={(e) => setPopulation(e.target.value)}
+          value={formData.population}
+          onChange={(e) => handleInputChange(e, "population")}
           placeholder={t.populationPlaceholder}
         />
         {errors.population && (
           <span className={styles.error}>{errors.population}</span>
         )}
+      </div>
+      <div>
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png"
+          onChange={handleFileUpload}
+        />
+        <label>{t.uploadImage}</label>
+        {errors.image && <span className={styles.error}>{errors.image}</span>}
+        {imagePreview}
       </div>
       <button type="submit">{t.addCountry}</button>
     </form>

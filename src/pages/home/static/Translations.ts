@@ -31,6 +31,11 @@ const translations = {
     population: "Population",
     populationPlaceholder: "Enter population",
     populationError: "Population must be a positive number",
+    language: "English",
+    name: "Name",
+    languageSpecific: "Language Specific Information",
+    uploadImage: "Upload Image",
+    imageError: "Only JPG and PNG files are allowed",
   },
   ka: {
     home: "მთავარი",
@@ -59,12 +64,16 @@ const translations = {
     countryNameGeo: "ქვეყნის სახელი (ქართულად)",
     countryNameEng: "ქვეყნის სახელი (ინგლისურად)",
     capital: "დედაქალაქი",
-
     capitalGeo: "დედაქალაქი (ქართულად)",
     capitalEng: "დედაქალაქი (ინგლისურად)",
     population: "მოსახლეობა",
     populationPlaceholder: "შეიყვანეთ მოსახლეობა",
     populationError: "მოსახლეობა უნდა იყოს დადებითი რიცხვი",
+    language: "ქართული",
+    name: "სახელი",
+    languageSpecific: "ენის სპეციფიკური ინფორმაცია",
+    uploadImage: "სურათის ატვირთვა",
+    imageError: "დასაშვებია მხოლოდ JPG და PNG ფაილები",
   },
 };
 
