@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useState, FormEvent } from "react";
-import styles from "./Contact.module.css";
+import React, { ChangeEvent, useState, FormEvent } from 'react';
+import styles from './Contact.module.css';
 
 interface FormErrors {
   name?: string;
@@ -9,10 +9,10 @@ interface FormErrors {
 }
 
 const Contact: React.FC = () => {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleNameInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,22 +34,22 @@ const Contact: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (name.trim() === "") {
-      newErrors.name = "Name is required";
+    if (name.trim() === '') {
+      newErrors.name = 'Name is required';
     }
 
-    if (surname.trim() === "") {
-      newErrors.surname = "Surname is required";
+    if (surname.trim() === '') {
+      newErrors.surname = 'Surname is required';
     }
 
-    if (email.trim() === "") {
-      newErrors.email = "Email is required";
+    if (email.trim() === '') {
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = 'Email is invalid';
     }
 
     if (message.trim().length < 10) {
-      newErrors.message = "Message must be at least 10 characters long";
+      newErrors.message = 'Message must be at least 10 characters long';
     }
 
     setErrors(newErrors);
@@ -70,13 +70,13 @@ const Contact: React.FC = () => {
       console.log(formData);
 
       // Reset form fields after submission
-      setName("");
-      setSurname("");
-      setEmail("");
-      setMessage("");
+      setName('');
+      setSurname('');
+      setEmail('');
+      setMessage('');
       setErrors({});
     } else {
-      console.log("Form has errors. Please correct them.");
+      console.log('Form has errors. Please correct them.');
     }
   };
 

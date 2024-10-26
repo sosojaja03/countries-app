@@ -1,30 +1,30 @@
-import React from "react";
-import * as styles from "./Header.module.css";
+import React from 'react';
+import * as styles from './Header.module.css';
 import {
   Link,
   NavLink,
   useParams,
   useNavigate,
   useLocation,
-} from "react-router-dom";
-import translations from "@/pages/home/static/Translations";
+} from 'react-router-dom';
+import translations from '@/pages/home/static/Translations';
 
 export const Header: React.FC = () => {
-  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
   const navigate = useNavigate();
   const location = useLocation();
   const t = translations[lang];
 
   const navItems = [
-    { name: t.destinations, path: "destinations" },
-    { name: t.tours, path: "tours" },
-    { name: t.about, path: "about" },
-    { name: t.contact, path: "contact" },
+    { name: t.destinations, path: 'destinations' },
+    { name: t.tours, path: 'tours' },
+    { name: t.about, path: 'about' },
+    { name: t.contact, path: 'contact' },
   ];
 
   const switchLanguage = () => {
-    const newLang = lang === "ka" ? "en" : "ka";
-    const currentPath = location.pathname.split("/").slice(2).join("/");
+    const newLang = lang === 'ka' ? 'en' : 'ka';
+    const currentPath = location.pathname.split('/').slice(2).join('/');
     navigate(`/${newLang}/${currentPath}`);
   };
 
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
           <span className={styles.searchIcon}>🔍</span>
           <button className={styles.button}>{t.bookNow}</button>
           <button onClick={switchLanguage} className={styles.languageSwitch}>
-            {lang === "ka" ? "EN" : "KA"}
+            {lang === 'ka' ? 'EN' : 'KA'}
           </button>
         </div>
       </div>

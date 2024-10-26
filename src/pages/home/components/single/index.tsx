@@ -1,13 +1,13 @@
-import { useParams } from "react-router-dom";
-import CountryData from "@/pages/home/static/RawData";
-import CountryNotFound from "@/pages/CountryNotFound";
-import translations from "../../static/Translations";
-import styles from "./Single.module.css";
+import { useParams } from 'react-router-dom';
+import CountryData from '@/pages/home/static/RawData';
+import CountryNotFound from '@/pages/CountryNotFound';
+import translations from '../../static/Translations';
+import styles from './Single.module.css';
 
 const SingleCardElement = () => {
-  const { id, lang } = useParams<{ id: string; lang: "ka" | "en" }>();
+  const { id, lang } = useParams<{ id: string; lang: 'ka' | 'en' }>();
 
-  const currentLang = lang || "ka";
+  const currentLang = lang || 'ka';
 
   const country = CountryData.find((c) => c.id === id);
 

@@ -1,7 +1,4 @@
-// import { useParams } from "react-router-dom";
-import SingleCardElement from "../../../components/single";
-// import CountryData from "@/pages/home/static/RawData";
-// import CountryNotFound from "@/pages/CountryNotFound";
+import SingleCardElement from '../../../components/single';
 
 const DetailedCard = () => {
   // const { id } = useParams();

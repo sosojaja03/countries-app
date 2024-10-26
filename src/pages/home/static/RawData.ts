@@ -1,4 +1,4 @@
-import translations from "./Translations";
+import translations from './Translations';
 export interface CardsProps {
   countries: Country[];
 }
@@ -12,14 +12,14 @@ export interface Country {
   image: string;
 }
 
-import GeImage from "../components/images/ge.svg"; // adjust the path based on your project structure
-import FrIMAGE from "../components/images/fr.svg"; // adjust the path based on your project structure
-import TrIMAGE from "../components/images/tr.svg"; // adjust the path based on your project structure
+import GeImage from '../components/images/ge.svg'; // adjust the path based on your project structure
+import FrIMAGE from '../components/images/fr.svg'; // adjust the path based on your project structure
+import TrIMAGE from '../components/images/tr.svg'; // adjust the path based on your project structure
 
 // Update your CountryData array to include image URLs for each country
 const CountryData: Country[] = [
   {
-    id: "1",
+    id: '1',
     name: { ka: translations.ka.georgia, en: translations.en.georgia },
     capital: { ka: translations.ka.tbilisi, en: translations.en.tbilisi },
     population: 3.713,
@@ -27,7 +27,7 @@ const CountryData: Country[] = [
     image: GeImage,
   },
   {
-    id: "2",
+    id: '2',
     name: { ka: translations.ka.france, en: translations.en.france },
     capital: { ka: translations.ka.paris, en: translations.en.paris },
     population: 67.97,
@@ -35,7 +35,7 @@ const CountryData: Country[] = [
     image: FrIMAGE,
   },
   {
-    id: "3",
+    id: '3',
     name: { ka: translations.ka.turkey, en: translations.en.turkey },
     capital: { ka: translations.ka.ankara, en: translations.en.ankara },
     population: 84.98,

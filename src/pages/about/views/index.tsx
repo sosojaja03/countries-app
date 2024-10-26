@@ -1,4 +1,4 @@
-import AboutDescription from "../components";
+import AboutDescription from '../components';
 
 const AboutWievs = () => {
   return (

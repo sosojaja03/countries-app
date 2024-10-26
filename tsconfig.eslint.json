@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
+    },
+    "types": ["node"],
+    "composite": true // Necessary for project references
+  },
+  "include": [
+    "src/**/*.ts", // Main TypeScript source files
+    "tests/**/*.ts", // Include tests if you want to lint them
+    "eslint.config.js", // ESLint config file
+    "scripts/**/*.ts" // Any custom scripts or configs you want ESLint to consider
+  ]
+}

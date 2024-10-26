@@ -1,7 +1,7 @@
-import React from "react";
-import styles from "./CardContent.module.css";
-import { useParams } from "react-router-dom";
-import translations from "@/pages/home/static/Translations";
+import React from 'react';
+import styles from './CardContent.module.css';
+import { useParams } from 'react-router-dom';
+import translations from '@/pages/home/static/Translations';
 
 interface CardContentProps {
   capital: {
@@ -15,7 +15,7 @@ export const CardContent: React.FC<CardContentProps> = ({
   capital,
   population,
 }) => {
-  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
   const t = translations[lang];
 
   return (

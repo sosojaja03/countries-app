@@ -1,10 +1,10 @@
-import React from "react";
-import * as styles from "./Hero.module.css";
-import translations from "@/pages/home/static/Translations";
-import { useParams } from "react-router-dom";
+import React from 'react';
+import * as styles from './Hero.module.css';
+import translations from '@/pages/home/static/Translations';
+import { useParams } from 'react-router-dom';
 
 const Hero: React.FC = () => {
-  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
   const t = translations[lang];
   return (
     <section className={styles.hero}>

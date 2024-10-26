@@ -4,43 +4,43 @@ import React, {
   ChangeEvent,
   useCallback,
   useMemo,
-} from "react";
-import styles from "./Card.module.css";
-import { CardHeader } from "@/pages/home/components/card/CardHeader";
-import { CardContent } from "@/pages/home/components/card/CardContent";
-import { Link } from "react-router-dom";
-import { CardsProps, Country } from "@/pages/home/static/RawData";
-import { useParams } from "react-router-dom";
-import translations from "@/pages/home/static/Translations";
+} from 'react';
+import styles from './Card.module.css';
+import { CardHeader } from '@/pages/home/components/card/CardHeader';
+import { CardContent } from '@/pages/home/components/card/CardContent';
+import { Link } from 'react-router-dom';
+import { CardsProps, Country } from '@/pages/home/static/RawData';
+import { useParams } from 'react-router-dom';
+import translations from '@/pages/home/static/Translations';
 
 type Action =
-  | { type: "LIKE"; id: string }
-  | { type: "DELETE"; id: string }
-  | { type: "RESTORE"; id: string }
-  | { type: "ADD"; country: Country }
-  | { type: "SORT"; order: "asc" | "desc" };
+  | { type: 'LIKE'; id: string }
+  | { type: 'DELETE'; id: string }
+  | { type: 'RESTORE'; id: string }
+  | { type: 'ADD'; country: Country }
+  | { type: 'SORT'; order: 'asc' | 'desc' };
 
 const countryReducer = (state: Country[], action: Action): Country[] => {
   switch (action.type) {
-    case "LIKE":
+    case 'LIKE':
       return state.map((country) =>
         country.id === action.id
           ? { ...country, likes: country.likes + 1 }
           : country
       );
-    case "DELETE":
+    case 'DELETE':
       return state.map((country) =>
         country.id === action.id ? { ...country, deleted: true } : country
       );
-    case "RESTORE":
+    case 'RESTORE':
       return state.map((country) =>
         country.id === action.id ? { ...country, deleted: false } : country
       );
-    case "ADD":
+    case 'ADD':
       return [...state, action.country];
-    case "SORT":
+    case 'SORT':
       return [...state].sort((a, b) =>
-        action.order === "asc" ? a.likes - b.likes : b.likes - a.likes
+        action.order === 'asc' ? a.likes - b.likes : b.likes - a.likes
       );
     default:
       return state;
@@ -53,16 +53,16 @@ const Card: React.FC<{
   onDelete: () => void;
   onRestore: () => void;
 }> = ({ country, onLike, onDelete, onRestore }) => {
-  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
 
   return (
     <div
-      className={`${styles.card} ${country.deleted ? styles.deletedCard : ""}`}
+      className={`${styles.card} ${country.deleted ? styles.deletedCard : ''}`}
     >
       <Link to={`${country.id}`}>
         <div className={styles.cardImageContainer}>
           <img
-            src={country.image || "/path/to/placeholder-image.jpg"}
+            src={country.image || '/path/to/placeholder-image.jpg'}
             alt={country.name[lang]}
             className={styles.cardImage}
           />
@@ -105,14 +105,14 @@ interface CountryFormData {
 const AddCountryForm: React.FC<{
   onAdd: (country: Country) => void;
 }> = ({ onAdd }) => {
-  const { lang = "ka" } = useParams<{ lang: "ka" | "en" }>();
+  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
   const t = translations[lang];
 
   const [formData, setFormData] = useState<CountryFormData>({
-    name: { ka: "", en: "" },
-    capital: { ka: "", en: "" },
-    population: "",
-    image: "",
+    name: { ka: '', en: '' },
+    capital: { ka: '', en: '' },
+    population: '',
+    image: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -121,18 +121,18 @@ const AddCountryForm: React.FC<{
     return (): boolean => {
       const newErrors: FormErrors = {};
 
-      if (formData.name.ka.trim() === "" || formData.name.en.trim() === "") {
-        newErrors.name = "Country name is required in both languages";
+      if (formData.name.ka.trim() === '' || formData.name.en.trim() === '') {
+        newErrors.name = 'Country name is required in both languages';
       }
 
       if (
-        formData.capital.ka.trim() === "" ||
-        formData.capital.en.trim() === ""
+        formData.capital.ka.trim() === '' ||
+        formData.capital.en.trim() === ''
       ) {
-        newErrors.capital = "Capital is required in both languages";
+        newErrors.capital = 'Capital is required in both languages';
       }
 
-      if (formData.population.trim() === "") {
+      if (formData.population.trim() === '') {
         newErrors.population = t.populationError;
       } else if (
         isNaN(Number(formData.population)) ||
@@ -141,8 +141,8 @@ const AddCountryForm: React.FC<{
         newErrors.population = t.populationError;
       }
 
-      if (formData.image === "") {
-        newErrors.image = "Image is required";
+      if (formData.image === '') {
+        newErrors.image = 'Image is required';
       }
 
       setErrors(newErrors);
@@ -155,7 +155,7 @@ const AddCountryForm: React.FC<{
     (
       e: ChangeEvent<HTMLInputElement>,
       field: keyof CountryFormData,
-      subField?: "ka" | "en"
+      subField?: 'ka' | 'en'
     ) => {
       const value = e.target.value;
       setFormData((prev) => {
@@ -163,7 +163,7 @@ const AddCountryForm: React.FC<{
           return {
             ...prev,
             [field]: {
-              ...prev[field as keyof Pick<CountryFormData, "name" | "capital">],
+              ...prev[field as keyof Pick<CountryFormData, 'name' | 'capital'>],
               [subField]: value,
             },
           };
@@ -179,7 +179,7 @@ const AddCountryForm: React.FC<{
     (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
-        if (file.type === "image/jpeg" || file.type === "image/png") {
+        if (file.type === 'image/jpeg' || file.type === 'image/png') {
           const reader = new FileReader();
           reader.onloadend = () => {
             setFormData((prev) => ({
@@ -210,10 +210,10 @@ const AddCountryForm: React.FC<{
       };
       onAdd(newCountry);
       setFormData({
-        name: { ka: "", en: "" },
-        capital: { ka: "", en: "" },
-        population: "",
-        image: "",
+        name: { ka: '', en: '' },
+        capital: { ka: '', en: '' },
+        population: '',
+        image: '',
       });
       setErrors({});
     }
@@ -226,7 +226,7 @@ const AddCountryForm: React.FC<{
         <img
           src={formData.image}
           alt="Country preview"
-          style={{ maxWidth: "200px", maxHeight: "200px" }}
+          style={{ maxWidth: '200px', maxHeight: '200px' }}
         />
       );
     }
@@ -239,13 +239,13 @@ const AddCountryForm: React.FC<{
         <input
           type="text"
           value={formData.name.ka}
-          onChange={(e) => handleInputChange(e, "name", "ka")}
+          onChange={(e) => handleInputChange(e, 'name', 'ka')}
           placeholder={t.countryNameGeo}
         />
         <input
           type="text"
           value={formData.name.en}
-          onChange={(e) => handleInputChange(e, "name", "en")}
+          onChange={(e) => handleInputChange(e, 'name', 'en')}
           placeholder={t.countryNameEng}
         />
         {errors.name && <span className={styles.error}>{errors.name}</span>}
@@ -254,13 +254,13 @@ const AddCountryForm: React.FC<{
         <input
           type="text"
           value={formData.capital.ka}
-          onChange={(e) => handleInputChange(e, "capital", "ka")}
+          onChange={(e) => handleInputChange(e, 'capital', 'ka')}
           placeholder={t.capitalGeo}
         />
         <input
           type="text"
           value={formData.capital.en}
-          onChange={(e) => handleInputChange(e, "capital", "en")}
+          onChange={(e) => handleInputChange(e, 'capital', 'en')}
           placeholder={t.capitalEng}
         />
         {errors.capital && (
@@ -271,7 +271,7 @@ const AddCountryForm: React.FC<{
         <input
           type="text"
           value={formData.population}
-          onChange={(e) => handleInputChange(e, "population")}
+          onChange={(e) => handleInputChange(e, 'population')}
           placeholder={t.populationPlaceholder}
         />
         {errors.population && (
@@ -298,12 +298,12 @@ const Cards: React.FC<CardsProps> = ({ countries: initialCountries }) => {
     countryReducer,
     initialCountries.map((country) => ({ ...country, deleted: false }))
   );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const handleSort = () => {
-    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
     setSortOrder(newOrder);
-    dispatch({ type: "SORT", order: newOrder });
+    dispatch({ type: 'SORT', order: newOrder });
   };
 
   const activeCountries = countries.filter((country) => !country.deleted);
@@ -311,28 +311,28 @@ const Cards: React.FC<CardsProps> = ({ countries: initialCountries }) => {
 
   return (
     <section className={styles.cards}>
-      <AddCountryForm onAdd={(country) => dispatch({ type: "ADD", country })} />
+      <AddCountryForm onAdd={(country) => dispatch({ type: 'ADD', country })} />
 
       <button onClick={handleSort} className={styles.sortButton}>
-        Sort by Likes ({sortOrder === "asc" ? "Ascending" : "Descending"})
+        Sort by Likes ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
       </button>
       <div className={styles.cardContainer}>
         {activeCountries.map((country) => (
           <Card
             key={country.id}
             country={country}
-            onLike={() => dispatch({ type: "LIKE", id: country.id })}
-            onDelete={() => dispatch({ type: "DELETE", id: country.id })}
-            onRestore={() => dispatch({ type: "RESTORE", id: country.id })}
+            onLike={() => dispatch({ type: 'LIKE', id: country.id })}
+            onDelete={() => dispatch({ type: 'DELETE', id: country.id })}
+            onRestore={() => dispatch({ type: 'RESTORE', id: country.id })}
           />
         ))}
         {deletedCountries.map((country) => (
           <Card
             key={country.id}
             country={country}
-            onLike={() => dispatch({ type: "LIKE", id: country.id })}
-            onDelete={() => dispatch({ type: "DELETE", id: country.id })}
-            onRestore={() => dispatch({ type: "RESTORE", id: country.id })}
+            onLike={() => dispatch({ type: 'LIKE', id: country.id })}
+            onDelete={() => dispatch({ type: 'DELETE', id: country.id })}
+            onRestore={() => dispatch({ type: 'RESTORE', id: country.id })}
           />
         ))}
       </div>
