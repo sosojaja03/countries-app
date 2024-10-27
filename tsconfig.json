@@ -2,13 +2,15 @@
   "compilerOptions": {
     "types": ["node"],
     "baseUrl": ".",
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./*"]
     }
   },
   "files": [],
-  "include": ["src/**/*.ts", "eslint.config.js"],
+  // "include": ["src/**/*.ts", "eslint.config.js"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

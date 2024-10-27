@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import translations from '@/pages/home/static/Translations';
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,3 +63,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+
+export default Header;
