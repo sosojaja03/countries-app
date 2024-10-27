@@ -3,7 +3,7 @@ import './index.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CardList from './pages/home/views/list/fordata';
 import AboutWievs from './pages/about/views';
-import Layout from './assets/components/layout/dashboard';
+import Layout from './assets/components/layout/dashboard/Layout';
 import PageNotFound from './pages/404';
 // import CountryNotFound from "./pages/CountryNotFound";
 import DetailedCard from './pages/home/views/list/detailed-card';
