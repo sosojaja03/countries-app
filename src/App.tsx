@@ -8,6 +8,7 @@ import PageNotFound from './pages/404';
 // import CountryNotFound from "./pages/CountryNotFound";
 import DetailedCard from './pages/home/views/list/detailed-card';
 import ContactPage from '@/pages/contact/Contact';
+import Test from './pages/test/Test';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
           <Route path="destinations" element={<AboutWievs />} />
           <Route path="about" element={<AboutWievs />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="test" element={<Test numInputs={4} />} />
           <Route path="tours/:id" element={<DetailedCard />} />
         </Route>
         <Route path="/" element={<Navigate to="/ka" replace />} />

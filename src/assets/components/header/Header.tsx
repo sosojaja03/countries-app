@@ -20,6 +20,7 @@ export const Header: React.FC = () => {
     { name: t.tours, path: 'tours' },
     { name: t.about, path: 'about' },
     { name: t.contact, path: 'contact' },
+    { name: t.test, path: 'Test' },
   ];
 
   const switchLanguage = () => {

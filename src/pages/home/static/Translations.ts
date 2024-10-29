@@ -36,6 +36,7 @@ const translations = {
     languageSpecific: 'Language Specific Information',
     uploadImage: 'Upload Image',
     imageError: 'Only JPG and PNG files are allowed',
+    test: 'Test',
   },
   ka: {
     home: 'მთავარი',
@@ -58,6 +59,7 @@ const translations = {
     georgia: 'საქართველო',
     tbilisi: 'თბილისი',
     france: 'საფრანგეთი',
+    test: 'ტესტი',
     paris: 'პარიზი',
     turkey: 'თურქეთი',
     ankara: 'ანკარა',
