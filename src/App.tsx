@@ -20,7 +20,7 @@ const App: React.FC = () => {
           <Route path="destinations" element={<AboutWievs />} />
           <Route path="about" element={<AboutWievs />} />
           <Route path="contact" element={<ContactPage />} />
-          <Route path="test" element={<Test numInputs={4} />} />
+          <Route path="test" element={<Test />} />
           <Route path="tours/:id" element={<DetailedCard />} />
         </Route>
         <Route path="/" element={<Navigate to="/ka" replace />} />
