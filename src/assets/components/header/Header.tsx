@@ -10,7 +10,7 @@ import {
 import translations from '@/pages/home/static/Translations';
 
 export const Header: React.FC = () => {
-  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
+  const { lang = 'en' } = useParams<{ lang: 'ka' | 'en' }>();
   const navigate = useNavigate();
   const location = useLocation();
   const t = translations[lang];
@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
   ];
 
   const switchLanguage = () => {
-    const newLang = lang === 'ka' ? 'en' : 'ka';
+    const newLang = lang === 'en' ? 'ka' : 'en';
     const currentPath = location.pathname.split('/').slice(2).join('/');
     navigate(`/${newLang}/${currentPath}`);
   };
@@ -54,10 +54,9 @@ export const Header: React.FC = () => {
           </ul>
         </nav>
         <div className={styles.headerActions}>
-          <span className={styles.searchIcon}>🔍</span>
           <button className={styles.button}>{t.bookNow}</button>
           <button onClick={switchLanguage} className={styles.languageSwitch}>
-            {lang === 'ka' ? 'EN' : 'KA'}
+            {lang === 'en' ? 'EN' : 'KA'}
           </button>
         </div>
       </div>

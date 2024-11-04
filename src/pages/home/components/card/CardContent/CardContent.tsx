@@ -15,7 +15,7 @@ export const CardContent: React.FC<CardContentProps> = ({
   capital,
   population,
 }) => {
-  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
+  const { lang = 'en' } = useParams<{ lang: 'ka' | 'en' }>();
   const t = translations[lang];
 
   return (
@@ -24,7 +24,7 @@ export const CardContent: React.FC<CardContentProps> = ({
         {t.capital}: {capital[lang]}
       </p>
       <p>
-        {t.population}: {population} million
+        {t.population}: {population}
       </p>
     </div>
   );

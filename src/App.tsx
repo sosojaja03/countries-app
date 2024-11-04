@@ -23,7 +23,7 @@ const App: React.FC = () => {
           <Route path="test" element={<Test />} />
           <Route path="tours/:id" element={<DetailedCard />} />
         </Route>
-        <Route path="/" element={<Navigate to="/ka" replace />} />
+        <Route path="/" element={<Navigate to="/en" replace />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

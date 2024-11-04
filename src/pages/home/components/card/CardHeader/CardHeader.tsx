@@ -11,7 +11,7 @@ interface CardHeaderProps {
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ title }) => {
-  const { lang = 'ka' } = useParams<{ lang: 'ka' | 'en' }>();
+  const { lang = 'en' } = useParams<{ lang: 'ka' | 'en' }>();
   const t = translations[lang];
 
   return (

@@ -37,8 +37,12 @@ const translations = {
     uploadImage: 'Upload Image',
     imageError: 'Only JPG and PNG files are allowed',
     test: 'Test',
+    save: 'Save',
+    cancel: 'cancel',
   },
   ka: {
+    save: 'შენახვა',
+    cancel: 'გაუქმება',
     home: 'მთავარი',
     notFound: 'გვერდი ვერ მოიძებნა',
     search: 'ძებნა',

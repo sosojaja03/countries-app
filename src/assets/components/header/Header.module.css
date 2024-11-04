@@ -83,3 +83,11 @@
   touch-action: manipulation;
   width: 100%;
 }
+
+.languageSwitch {
+  margin-left: 1rem;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 10%;
+  cursor: pointer;
+}

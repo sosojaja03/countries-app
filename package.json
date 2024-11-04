@@ -7,6 +7,8 @@
     "start": "vite",
     "build": "tsc -b && vite build",
     "check-ts": "tsc -b",
+    "run-db": "npx json-server src/database.json",
+    "seed-db": "node src/seed-db.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -16,6 +18,8 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "axios": "^1.7.7",
+    "json-server": "^1.0.0-beta.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"
