@@ -11,6 +11,9 @@ export interface Country {
   deleted?: boolean;
   image: string;
 }
+export interface ApiResponse<T> {
+  data: T;
+}
 
 import GeImage from '../components/images/ge.svg'; // adjust the path based on your project structure
 import FrIMAGE from '../components/images/fr.svg'; // adjust the path based on your project structure
