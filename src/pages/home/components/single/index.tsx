@@ -1,10 +1,9 @@
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import CountryNotFound from '@/pages/CountryNotFound';
 import translations from '../../static/Translations';
 import styles from './Single.module.css';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { getCountriesData } from '@/API/countries';
 interface Country {
   id: string;
   name: { ka: string; en: string };
@@ -15,45 +14,45 @@ interface Country {
 
 const SingleCardElement = () => {
   const { id, lang } = useParams<{ id: string; lang: 'ka' | 'en' }>();
-  const [country, setCountry] = useState<Country | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const currentLang = lang || 'ka';
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/countries/${id}`)
-      .then((response) => {
-        setCountry(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching country:', error);
-        setError('Error fetching country data');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [id]);
+  // Use React Query's useQuery to fetch the single country's data
+  const { data, isLoading, isError } = useQuery<Country[]>({
+    queryKey: ['countries-list', id],
+    queryFn: async () => {
+      try {
+        const data = await getCountriesData();
+        return data;
+      } catch (error) {
+        console.error('Failed to fetch countries data:', error);
+        throw error;
+      }
+    },
+    retry: 0,
+  });
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !country) return <CountryNotFound />;
+  if (isLoading) return <p>Loading...</p>;
+
+  if (isError || !data) return <CountryNotFound />;
+
+  const country = data ? data.find((country) => country.id === id) : null;
 
   return (
     <div className={styles.cardContainer}>
       <img
-        src={country.image}
-        alt={country.name[currentLang]}
+        src={country?.image}
+        alt={country?.name[currentLang]}
         className={styles.cardImage}
       />
       <div className={styles.cardInfo}>
-        <h1>{country.name[currentLang]}</h1>
+        <h1>{country?.name[currentLang]}</h1>
         <p>
           <strong>{translations[currentLang].capital}:</strong>{' '}
-          {country.capital[currentLang]}
+          {country?.capital[currentLang]}
         </p>
         <p>
           <strong>{translations[currentLang].population}:</strong>{' '}
-          {country.population}
+          {country?.population}
         </p>
       </div>
     </div>

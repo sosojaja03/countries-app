@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { default as axios } from 'axios';
 import styles from './Card.module.css';
 import { CardHeader } from '@/pages/home/components/card/CardHeader';
 import { CardContent } from '@/pages/home/components/card/CardContent';
@@ -18,7 +17,6 @@ import {
   getCountriesData,
   createCountry,
 } from '@/API/countries';
-// import { httpClient } from '@/API';
 import { useMutation } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 
@@ -275,6 +273,30 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
     image: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const { mutate: addCountry, isPending: isAdding } = useMutation({
+    mutationFn: async (newCountry: Country) => {
+      try {
+        const data = await createCountry(newCountry);
+        return data;
+      } catch (error) {
+        console.error('Error adding country:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      onAdd(data);
+      setFormData({
+        name: { ka: '', en: '' },
+        capital: { ka: '', en: '' },
+        population: '',
+        image: '',
+      });
+      setErrors({});
+    },
+    onError: (error) => {
+      console.error('Error adding country:', error);
+    },
+  });
 
   const validateForm = useMemo(() => {
     return (): boolean => {
@@ -308,6 +330,24 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
       return Object.keys(newErrors).length === 0;
     };
   }, [formData, t]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validateForm()) {
+      const newCountry: Country = {
+        id: Date.now().toString(),
+        name: formData.name,
+        capital: formData.capital,
+        population: Number(formData.population),
+        likes: 0,
+        deleted: false,
+        image: formData.image,
+      };
+
+      // Trigger the mutation to add the country
+      addCountry(newCountry);
+    }
+  };
 
   const handleInputChange = useCallback(
     (
@@ -352,35 +392,6 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
     },
     [t.imageError]
   );
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validateForm()) {
-      const newCountry: Country = {
-        id: Date.now().toString(),
-        name: formData.name,
-        capital: formData.capital,
-        population: Number(formData.population),
-        likes: 0,
-        deleted: false,
-        image: formData.image,
-      };
-
-      axios
-        .post('http://localhost:3000/countries', newCountry)
-        .then(() => {
-          onAdd(newCountry);
-          setFormData({
-            name: { ka: '', en: '' },
-            capital: { ka: '', en: '' },
-            population: '',
-            image: '',
-          });
-          setErrors({});
-        })
-        .catch((error) => console.error('Error adding country:', error));
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit} className={styles.addForm}>
@@ -436,7 +447,9 @@ const AddCountryForm: React.FC<{ onAdd: (country: Country) => void }> = ({
         <label>{t.uploadImage}</label>
         {errors.image && <span className={styles.error}>{errors.image}</span>}
       </div>
-      <button type="submit">{t.addCountry}</button>
+      <button type="submit" disabled={isAdding}>
+        {isAdding ? 'Adding...' : t.addCountry}
+      </button>
     </form>
   );
 };
@@ -513,26 +526,19 @@ const Cards: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  // const fetchCountries = useCallback(() => {
-  //   axios
-  //     .get('http://localhost:3000/countries')
-  //     .then((response) =>
-  //       dispatch({ type: 'SET_COUNTRIES', countries: response.data })
-  //     )
-  //     .catch((error) => console.error('Error fetching countries:', error));
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchCountries();
-  // }, [fetchCountries]);
-
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['countries-list'],
-    queryFn: getCountriesData,
+    queryFn: async () => {
+      try {
+        const data = await getCountriesData();
+        return data;
+      } catch (error) {
+        console.error('Failed to fetch countries data:', error);
+        throw error;
+      }
+    },
     retry: 0,
   });
-
-  console.log(isLoading, isError);
 
   useEffect(() => {
     if (data) {
@@ -540,54 +546,74 @@ const Cards: React.FC = () => {
     }
   }, [data, dispatch]);
 
-  console.log(data);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error fetching countries</div>;
-  }
-
-  // const { mutate: likeCountry } = useMutation({
-  //   mutationFn: patchCountries,
-  //   onSuccess: (_, { id }) => {
-  //     dispatch({ type: 'LIKE', id });
-  //     refetchCountriesList();
-  //   },
-  // });
-
-  // // Add mutation
+  // Add mutation
   // const { mutate: addCountry } = useMutation({
-  //   mutationFn: postCountry,
+  //   mutationFn: createCountry,
   //   onSuccess: (data) => {
   //     dispatch({ type: 'ADD', country: data });
-  //     refetchCountriesList();
+  //     refetch();
   //   },
+  //   onError: (error) => console.error('Error adding country:', error),
   // });
 
-  // // Edit mutation
-  // const { mutate: editCountry } = useMutation({
-  //   mutationFn: putCountries,
-  //   onSuccess: (data) => {
-  //     dispatch({ type: 'EDIT', country: data });
-  //     refetchCountriesList();
-  //   },
-  // });
+  // Delete mutation
+  const { mutate: DeleteCountry } = useMutation({
+    mutationFn: async (id: string) => {
+      try {
+        await deleteCountry(id);
+      } catch (error) {
+        console.error('Error deleting country:', error);
+        throw error;
+      }
+    },
+    onSuccess: (_, id) => {
+      dispatch({ type: 'DELETE', id });
+      setIsDeleting(null);
+      refetch();
+    },
+  });
 
-  // // Delete mutation
-  // const { mutate: deleteCountry } = useMutation({
-  //   mutationFn: deleteCountries,
-  //   onSuccess: (_, id) => {
-  //     dispatch({ type: 'DELETE', id });
-  //     setIsDeleting(null);
-  //     refetchCountriesList();
-  //   },
-  // });
+  // Edit mutation
+  const { mutate: editCountry } = useMutation({
+    mutationFn: async (updatedCountry: {
+      id: string;
+      payload: Partial<Country>;
+    }) => {
+      try {
+        const data = await updateCountry(updatedCountry);
+        return data;
+      } catch (error) {
+        console.error('Error updating country:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      dispatch({ type: 'EDIT', country: data });
+      refetch();
+    },
+  });
 
-  // if (areCountriesLoaded) return <div>Loading...</div>;
-  // if (areCountriesErrored) return <div>Error loading countries.</div>;
+  const { mutate: likeCountry } = useMutation({
+    mutationFn: async (updatedCountry: {
+      id: string;
+      payload: Partial<Country>;
+    }) => {
+      try {
+        await updateCountry(updatedCountry);
+      } catch (error) {
+        console.error('Error liking country:', error);
+        throw error;
+      }
+    },
+    onSuccess: (_, { id }) => {
+      dispatch({ type: 'LIKE', id });
+      // refetch();
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (isError || !data) return <p>error...</p>;
 
   function handleSort() {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
@@ -598,25 +624,16 @@ const Cards: React.FC = () => {
   const handleLike = (id: string) => {
     const country = countries.find((country) => country.id === id);
     if (country) {
-      axios
-        .patch(`http://localhost:3000/countries/${id}`, {
-          likes: country.likes + 1,
-        })
-        .then(() => dispatch({ type: 'LIKE', id }))
-        .catch((error) => console.error('Error liking country:', error));
+      likeCountry({
+        id,
+        payload: { likes: country.likes + 1 },
+      });
     }
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      setIsDeleting(id);
-      await axios.delete(`http://localhost:3000/countries/${id}`);
-      dispatch({ type: 'DELETE', id });
-    } catch (error) {
-      console.error('Error deleting country:', error);
-    } finally {
-      setIsDeleting(null);
-    }
+    setIsDeleting(null);
+    DeleteCountry(id);
   };
 
   const handleAdd = (country: Country) => {
@@ -624,13 +641,10 @@ const Cards: React.FC = () => {
   };
 
   const handleEdit = (updatedCountry: Country) => {
-    axios
-      .put(
-        `http://localhost:3000/countries/${updatedCountry.id}`,
-        updatedCountry
-      )
-      .then(() => dispatch({ type: 'EDIT', country: updatedCountry }))
-      .catch((error) => console.error('Error updating country:', error));
+    editCountry({
+      id: updatedCountry.id,
+      payload: { ...updatedCountry },
+    });
   };
 
   return (
