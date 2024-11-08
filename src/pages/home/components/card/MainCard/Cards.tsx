@@ -6,12 +6,21 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import axios from 'axios';
+import { default as axios } from 'axios';
 import styles from './Card.module.css';
 import { CardHeader } from '@/pages/home/components/card/CardHeader';
 import { CardContent } from '@/pages/home/components/card/CardContent';
 import { Link, useParams } from 'react-router-dom';
 import translations from '@/pages/home/static/Translations';
+import {
+  deleteCountry,
+  updateCountry,
+  getCountriesData,
+  createCountry,
+} from '@/API/countries';
+// import { httpClient } from '@/API';
+import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 // Types and Interfaces
 type Action =
@@ -177,6 +186,7 @@ const EditCountryForm: React.FC<{
         population: Number(formData.population),
         image: formData.image,
       };
+      // httpClient.patchCountries(id, updatedCountry);
       onEdit(updatedCountry);
     }
   };
@@ -503,24 +513,87 @@ const Cards: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const fetchCountries = useCallback(() => {
-    axios
-      .get('http://localhost:3000/countries')
-      .then((response) =>
-        dispatch({ type: 'SET_COUNTRIES', countries: response.data })
-      )
-      .catch((error) => console.error('Error fetching countries:', error));
-  }, []);
+  // const fetchCountries = useCallback(() => {
+  //   axios
+  //     .get('http://localhost:3000/countries')
+  //     .then((response) =>
+  //       dispatch({ type: 'SET_COUNTRIES', countries: response.data })
+  //     )
+  //     .catch((error) => console.error('Error fetching countries:', error));
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchCountries();
+  // }, [fetchCountries]);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['countries-list'],
+    queryFn: getCountriesData,
+    retry: 0,
+  });
+
+  console.log(isLoading, isError);
 
   useEffect(() => {
-    fetchCountries();
-  }, [fetchCountries]);
+    if (data) {
+      dispatch({ type: 'SET_COUNTRIES', countries: data });
+    }
+  }, [data, dispatch]);
 
-  const handleSort = () => {
+  console.log(data);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching countries</div>;
+  }
+
+  // const { mutate: likeCountry } = useMutation({
+  //   mutationFn: patchCountries,
+  //   onSuccess: (_, { id }) => {
+  //     dispatch({ type: 'LIKE', id });
+  //     refetchCountriesList();
+  //   },
+  // });
+
+  // // Add mutation
+  // const { mutate: addCountry } = useMutation({
+  //   mutationFn: postCountry,
+  //   onSuccess: (data) => {
+  //     dispatch({ type: 'ADD', country: data });
+  //     refetchCountriesList();
+  //   },
+  // });
+
+  // // Edit mutation
+  // const { mutate: editCountry } = useMutation({
+  //   mutationFn: putCountries,
+  //   onSuccess: (data) => {
+  //     dispatch({ type: 'EDIT', country: data });
+  //     refetchCountriesList();
+  //   },
+  // });
+
+  // // Delete mutation
+  // const { mutate: deleteCountry } = useMutation({
+  //   mutationFn: deleteCountries,
+  //   onSuccess: (_, id) => {
+  //     dispatch({ type: 'DELETE', id });
+  //     setIsDeleting(null);
+  //     refetchCountriesList();
+  //   },
+  // });
+
+  // if (areCountriesLoaded) return <div>Loading...</div>;
+  // if (areCountriesErrored) return <div>Error loading countries.</div>;
+
+  function handleSort() {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
     setSortOrder(newOrder);
     dispatch({ type: 'SORT', order: newOrder });
-  };
+  }
 
   const handleLike = (id: string) => {
     const country = countries.find((country) => country.id === id);
@@ -568,18 +641,20 @@ const Cards: React.FC = () => {
           Sort by Likes ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
         </button>
       </div>
-      <div className={styles.cardsContainer}>
-        {countries.map((country) => (
-          <Card
-            key={country.id}
-            country={country}
-            onLike={() => handleLike(country.id)}
-            onDelete={() => handleDelete(country.id)}
-            onEdit={handleEdit}
-            isDeleting={isDeleting === country.id}
-          />
-        ))}
-      </div>
+      {Array.isArray(countries) ? (
+        <div className={styles.cardsContainer}>
+          {countries.map((country) => (
+            <Card
+              key={country.id}
+              country={country}
+              onLike={() => handleLike(country.id)}
+              onDelete={() => handleDelete(country.id)}
+              onEdit={handleEdit}
+              isDeleting={isDeleting === country.id}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 };
